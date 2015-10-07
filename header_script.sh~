@@ -22,7 +22,7 @@
 #number of lines to remove from previous licensed code
 lines_to_remove=21
 
-for i in *.h *.cpp #or *.c *.py # or whatever other pattern...
+for i in *.h *.cpp #or *.h # or whatever other pattern...
 do
   if ! grep -q Copyright $i
   then
