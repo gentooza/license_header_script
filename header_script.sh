@@ -1,8 +1,8 @@
 #!/bin/bash
  #
- # license header script v1
+ # license header script v2
  #
- # Copyright (C) 2015 Joaquín Cuéllar
+ # Copyright (C) 2017 Joaquín Cuéllar
  #
  # license header script is free software: you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
@@ -20,16 +20,75 @@
  #
 
 #number of lines to remove from previous licensed code
-lines_to_remove=21
+lines_to_remove=22
+appName="our Program"
+appOwner="our collective"
+sourceCode="https://ourRepository.git"
+actualYear=$(date +'%Y')
 
-for i in *.h *.cpp #or *.c *.py # or whatever other pattern...
+echo "C and C++ code..."
+
+echo "/*" > head
+echo $appName >> head
+echo "" >> head
+echo "Copyright("$actualYear"): " $appOwner >> head
+echo "" >> head
+echo "Source code:" >> head
+echo $sourceCode >> head
+echo "" >> head
+
+echo "*/" > closeHead
+echo "" >> closeHead
+
+# cleaning
+for i in *.h *.cpp *.c # *.py # or whatever other pattern...
 do
-  if ! grep -q Copyright $i
+  if grep -q Copyright $i
   then
-    cat License_header $i >$i.new && mv $i.new $i
-  else
     count=`head -$lines_to_remove "$i" |wc -c`
     dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
     truncate -s "-$count" "$i"
   fi
 done
+# writting
+for i in *.h *.cpp *.c # *.py # or whatever other pattern...
+do
+  if ! grep -q Copyright $i
+  then
+    cat   head License_header closeHead $i >$i.new && mv $i.new $i
+  fi
+done
+
+echo "Python code..."
+
+echo "'''" > head
+echo $appName >> head
+echo "" >> head
+echo "Copyright("$actualYear"): " $appOwner >> head
+echo "" >> head
+echo "Source code:" >> head
+echo $sourceCode >> head
+echo "" >> head
+
+echo "'''" > closeHead
+echo "" >> closeHead
+
+# cleaning
+for i in *.py # or whatever other pattern...
+do
+  if grep -q Copyright $i
+  then
+    count=`head -$lines_to_remove "$i" |wc -c`
+    dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
+    truncate -s "-$count" "$i"
+  fi
+done
+# writting
+for i in *.py # or whatever other pattern...
+do
+  if ! grep -q Copyright $i
+  then
+    cat   head License_header closeHead $i >$i.new && mv $i.new $i
+  fi
+done
+
