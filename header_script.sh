@@ -2,7 +2,7 @@
  #
  # license header script v2
  #
- # Copyright (C) 2017 Joaquín Cuéllar
+ # Copyright (C) 2017-2018 Joaquín Cuéllar <joa.cuellar (at) riseup.net>
  #
  # license header script is free software: you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 #number of lines to remove from previous licensed code
 lines_to_remove=22
-appName="our Program"
-appOwner="our collective"
-sourceCode="https://ourRepository.git"
+appName="Gentooza's Sudokus Resolver"
+appOwner="Joa Cuéllar <joa.cuellar (at) riseup.net>"
+sourceCode="not yet"
 actualYear=$(date +'%Y')
 
 echo "C and C++ code..."
@@ -41,22 +41,27 @@ echo "*/" > closeHead
 echo "" >> closeHead
 
 # cleaning
-for i in *.h *.cpp *.c # *.py # or whatever other pattern...
+for i in *.h *.cpp *.c *hpp *cxx # or whatever other pattern...
 do
-  if grep -q Copyright $i
-  then
-    count=`head -$lines_to_remove "$i" |wc -c`
-    dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
-    truncate -s "-$count" "$i"
-  fi
+    [ -f "$i" ] || continue  #guard against working with *.XXX files
+    if grep -q Copyright $i
+    then
+	echo "   removing old license header to $i"
+	count=`head -$lines_to_remove "$i" |wc -c`
+	dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
+	truncate -s "-$count" "$i"
+    fi
 done
+
 # writting
 for i in *.h *.cpp *.c # *.py # or whatever other pattern...
 do
-  if ! grep -q Copyright $i
-  then
-    cat   head License_header closeHead $i >$i.new && mv $i.new $i
-  fi
+    [ -f "$i" ] || continue    
+    if ! grep -q Copyright $i
+    then
+	echo "   adding license header to $i"
+	cat   head License_header closeHead $i >$i.new && mv $i.new $i
+    fi
 done
 
 echo "Python code..."
@@ -76,19 +81,25 @@ echo "" >> closeHead
 # cleaning
 for i in *.py # or whatever other pattern...
 do
-  if grep -q Copyright $i
-  then
-    count=`head -$lines_to_remove "$i" |wc -c`
-    dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
-    truncate -s "-$count" "$i"
-  fi
+    [ -f "$i" ] || continue  
+    if grep -q Copyright $i
+    then
+	echo "   removing old license header to $i"
+	count=`head -$lines_to_remove "$i" |wc -c`
+	dd if="$i" bs="$count" skip=1 of="$i" conv=notrunc
+	truncate -s "-$count" "$i"
+    fi
 done
 # writting
 for i in *.py # or whatever other pattern...
 do
-  if ! grep -q Copyright $i
-  then
-    cat   head License_header closeHead $i >$i.new && mv $i.new $i
-  fi
+    [ -f "$i" ] || continue
+    if ! grep -q Copyright $i
+    then
+	echo "   adding license header to $i"
+	cat   head License_header closeHead $i >$i.new && mv $i.new $i
+    fi
 done
+#removing auxiliar files
+rm head closeHead
 
