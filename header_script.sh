@@ -21,9 +21,9 @@
 
 #number of lines to remove from previous licensed code
 lines_to_remove=22
-appName="Gentooza's Sudokus Resolver"
-appOwner="Joa Cuéllar <joa.cuellar (at) riseup.net>"
-sourceCode="not yet"
+appName="our Program"
+appOwner="our collective"
+sourceCode="https://ourRepository.git"
 actualYear=$(date +'%Y')
 
 echo "C and C++ code..."
